@@ -11,10 +11,7 @@ import SwiftUI
 struct studyApp: App {
     var body: some Scene {
         WindowGroup {
-            TestLazyVStackView()
-                .onAppear {
-                    print("onAppear::: TestLazyVStackView")
-                }
+            RandomUserView()
         }
     }
 }
