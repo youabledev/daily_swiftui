@@ -25,6 +25,16 @@ class RefreshControlHelper {
     }
 }
 
+struct CustomLoadingIndicatorView: View {
+    var body: some View {
+        ProgressView()
+            .progressViewStyle(.circular)
+            .scaleEffect(1.7, anchor: .center)
+            .progressViewStyle(.circular)
+            .scaleEffect(1.7, anchor: .center)
+    }
+}
+
 struct RandomUserView: View {
     private let refreshControlHelper = RefreshControlHelper()
     
@@ -33,12 +43,23 @@ struct RandomUserView: View {
     var body: some View {
         List(viewModel.randomUsers) { randomUser in
             RandomUserRowView(randomUser: randomUser)
+                .onAppear { fetchMore(randomUser) }
         }
         .introspect(.list, on: .iOS(.v17), customize: configureRefreshControl(_:))
+        
+        if viewModel.isLoading {
+            CustomLoadingIndicatorView()
+        }
     }
 }
 
 extension RandomUserView {
+    fileprivate func fetchMore(_ randomUser: RandomUser) {
+        if self.viewModel.randomUsers.last == randomUser {
+            viewModel.fetchMoreSubject.send()
+        }
+    }
+    
     fileprivate func configureRefreshControl(_ tableView: UICollectionView) {
         let refreshControl = UIRefreshControl()
         refreshControlHelper.refreshControl = refreshControl
