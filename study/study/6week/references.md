@@ -63,3 +63,36 @@ or
             viewModel.refreshActionSubject.send()
         }
 ```
+
+### 중복 코드 줄이기
+```Swift
+    fileprivate func fetchMore()  {
+        guard let page = pageInfo?.page else { return }
+        
+        let pageToLoad = page + 1
+        self.fetchRandomUsers(pageToLoad)
+    }
+    
+    fileprivate func fetchRandomUsers(_ currentPage: Int? = nil) {
+        let page = currentPage == nil ? 1 : currentPage!
+        
+        self.isLoading = true
+        
+        AF.request(RandomUserRouter.getUsers(page: page))
+            .publishDecodable(type: RandomUserResponse.self)
+//            .compactMap { $0.value?.results }
+            .compactMap { $0.value }
+            .sink { completion in
+                print(completion)
+            } receiveValue: { [weak self] receivedValue in
+                print(receivedValue.description)
+//                self?.randomUsers.append(contentsOf: receivedValue)
+                self?.randomUsers += receivedValue.results
+                self?.pageInfo = receivedValue.info
+                
+                self?.isLoading = false
+            }
+            .store(in: &subscription)
+    }
+```
+- fetchMore()을 파라미터 없이 호출하면 page가 1이기 때문에 초기화 코드와 동일함
