@@ -12,6 +12,7 @@ import Alamofire
 class RandomUserViewModel: ObservableObject {
     // MARK: Properties
     var subscription = Set<AnyCancellable>()
+    var refreshActionSubject = PassthroughSubject<(), Never>()
     
     @Published var randomUsers = [RandomUser]()
     
@@ -19,9 +20,16 @@ class RandomUserViewModel: ObservableObject {
     
     init() {
         fetchRandomUsers()
+        
+        refreshActionSubject
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.fetchRandomUsers()
+            }
+            .store(in: &subscription)
     }
     
-    func fetchRandomUsers() {
+    fileprivate func fetchRandomUsers() {
         AF.request(url)
             .publishDecodable(type: RandomUserResponse.self)
             .compactMap { $0.value?.results }
@@ -29,7 +37,8 @@ class RandomUserViewModel: ObservableObject {
                 print(completion)
             } receiveValue: { [weak self] (receivedValue: [RandomUser]) in
                 print(receivedValue.description)
-                self?.randomUsers.append(contentsOf: receivedValue)
+//                self?.randomUsers.append(contentsOf: receivedValue)
+                self?.randomUsers = receivedValue
             }
             .store(in: &subscription)
     }

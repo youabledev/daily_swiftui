@@ -17,7 +17,7 @@ struct RandomUserRowView: View {
                 .font(.system(size: 25))
                 .lineLimit(2)
                 .minimumScaleFactor(0.5) // shrink font size: 50% 까지 프레임에 맞추어 줄어 들 수 있음
-            Text(randomUser.name.title)
+            Text(randomUser.name.title + " " + randomUser.name.last)
         }
         .frame(maxWidth: .infinity, maxHeight: 50, alignment: .leading)
         .padding()

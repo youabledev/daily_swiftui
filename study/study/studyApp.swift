@@ -11,7 +11,7 @@ import SwiftUI
 struct studyApp: App {
     var body: some Scene {
         WindowGroup {
-            RandomUserView()
+            RefreshableModifierView()
         }
     }
 }
