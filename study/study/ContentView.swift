@@ -8,14 +8,15 @@
 import SwiftUI
 
 struct ContentView: View {
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
+        NavigationStack {
+            List {
+                NavigationLink("7 주차 강의") {
+                    Week7ContentView()
+                }
+            } //: List
+        } //: NavigationStack
     }
 }
 
