@@ -40,6 +40,7 @@
 		6CE1BB9F2AD2B2280094158C /* RefreshableModifierView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE1BB9E2AD2B2280094158C /* RefreshableModifierView.swift */; };
 		6CE1BBA22AD2B46C0094158C /* RandomUserRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE1BBA12AD2B46C0094158C /* RandomUserRouter.swift */; };
 		6CE1BBA52AD2D4720094158C /* DarkModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE1BBA42AD2D4720094158C /* DarkModeView.swift */; };
+		6CE1BBA62AD2DE970094158C /* references.md in Resources */ = {isa = PBXBuildFile; fileRef = 6CE1BB932AD1D45B0094158C /* references.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -310,6 +311,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6CE1BBA62AD2DE970094158C /* references.md in Resources */,
 				6C9F93762ACBDFA70015C75D /* Preview Assets.xcassets in Resources */,
 				6C9F93732ACBDFA70015C75D /* Assets.xcassets in Resources */,
 			);

@@ -60,16 +60,27 @@ class RandomUserViewModel: ObservableObject {
             .publishDecodable(type: RandomUserResponse.self)
 //            .compactMap { $0.value?.results }
             .compactMap { $0.value }
-            .sink { completion in
-                print(completion)
-            } receiveValue: { [weak self] receivedValue in
-                print(receivedValue.description)
-//                self?.randomUsers.append(contentsOf: receivedValue)
-                self?.randomUsers += receivedValue.results
-                self?.pageInfo = receivedValue.info
-                
-                self?.isLoading = false
-            }
+            .sink(receiveCompletion: fetchRandomUserCompletion(completion:), receiveValue: fetchRandomUserResponse(_:))
+//            .sink { completion in
+//                print(completion)
+//            } receiveValue: { [weak self] receivedValue in
+//                print(receivedValue.description)
+////                self?.randomUsers.append(contentsOf: receivedValue)
+//                self?.randomUsers += receivedValue.results
+//                self?.pageInfo = receivedValue.info
+//                
+//                self?.isLoading = false
+//            }
             .store(in: &subscription)
+    }
+    
+    fileprivate func fetchRandomUserResponse(_ randomUserResponse: RandomUserResponse) {
+        self.randomUsers += randomUserResponse.results
+        self.pageInfo = randomUserResponse.info
+        self.isLoading = false
+    }
+    
+    fileprivate func fetchRandomUserCompletion(completion: Subscribers.Completion<DataResponsePublisher<RandomUserResponse>.Failure>) {
+        
     }
 }

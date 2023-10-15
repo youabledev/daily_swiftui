@@ -96,3 +96,6 @@ or
     }
 ```
 - fetchMore()을 파라미터 없이 호출하면 page가 1이기 때문에 초기화 코드와 동일함
+
+### Asset Color 
+- Asset에서 new color set을 추가하면 light, dark 모드에 대응할 수 있음
