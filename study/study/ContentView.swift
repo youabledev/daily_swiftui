@@ -14,6 +14,7 @@ struct ContentView: View {
             List {
                 NavigationLink("7 주차 강의") {
                     Week7ContentView()
+                        .environmentObject(WebViewModel())
                 }
             } //: List
         } //: NavigationStack
