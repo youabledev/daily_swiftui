@@ -81,6 +81,28 @@ extension CustomWebView.Coordinator: WKUIDelegate {
 }
 
 extension CustomWebView.Coordinator: WKNavigationDelegate {
+    /// navigation action이 들어왔을 때
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        guard let url = navigationAction.request.url else {
+            decisionHandler(.cancel)
+            return
+        }
+        
+        switch url.scheme {
+        case "tel", "mailto":
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            decisionHandler(.cancel)
+        default:
+            switch url.host() {
+            case "www.youtube.com":
+                customWebView.webViewModel.jsAlertEvent.send(JSAlert(url.host(), type: .BLOCKED_SITE))
+                decisionHandler(.cancel)
+            default:
+                decisionHandler(.allow)
+            }
+        }
+    }
+    
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         customWebView
             .webViewModel
