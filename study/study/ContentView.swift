@@ -16,6 +16,11 @@ struct ContentView: View {
                     Week7ContentView()
                         .environmentObject(WebViewModel())
                 }
+                
+                NavigationLink("Environment & EnvironmentObject") {
+                    ThemeView()
+                        .environment(\.layoutDirection, .rightToLeft)
+                }
             } //: List
         } //: NavigationStack
     }
