@@ -21,6 +21,11 @@ struct ContentView: View {
                     ThemeView()
                         .environment(\.layoutDirection, .rightToLeft)
                 }
+                
+                NavigationLink("Injecting Observable with environment") {
+                    UserInfoView()
+                }
+                
             } //: List
         } //: NavigationStack
     }
