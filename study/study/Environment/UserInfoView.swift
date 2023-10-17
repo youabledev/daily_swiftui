@@ -18,6 +18,8 @@ struct UserInfoView: View {
 
 struct UserIDCardView: View {
     @Environment(UserInfo.self) private var userInfo
+//    @Binding var userInfo: UserInfo
+    @State private var newUserName: String = ""
     
     var body: some View {
         VStack {
@@ -42,7 +44,10 @@ struct UserIDCardView: View {
                 Text(userInfo.phoneNumber)
             } //: HStack
             
-            TextField("\(userInfo.name)", text: .constant(userInfo.name))
+            TextField("새로운 사용자 이름", text: $newUserName)
+                .onChange(of: newUserName) { oldValue, newValue in
+                    self.userInfo.name = newValue
+                }
         } //: VStack
         .padding(.horizontal, 20)
     }
