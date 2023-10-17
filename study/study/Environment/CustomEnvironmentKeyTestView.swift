@@ -23,14 +23,24 @@ struct CustomEnvironmentKeyTestView: View {
     
     var body: some View {
         HStack {
-            Button {
-                customCounter = customCounter + 1
-            } label: {
-                Text("+")
-            }
+//            Button {
+                // get only property
+//                customCounter = customCounter + 1
+//            } label: {
+//                Text("+")
+//            }
             Text("\(customCounter)")
+            CustomEnvironmentKeyTestSubView()
         }
         
+    }
+}
+
+struct CustomEnvironmentKeyTestSubView: View {
+    @Environment(\.customCounter) var customCounter
+    
+    var body: some View {
+            Text(" + 또 다른 하위 뷰 : \(customCounter)")
     }
 }
 
