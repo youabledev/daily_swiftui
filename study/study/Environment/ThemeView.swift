@@ -32,7 +32,9 @@ struct ThemeView: View {
                     }
             }
         }
+//        .transformEnvironment(\.customTheme) { dump($0) }
         .customTheme(theme)
+        
         
     }
     
@@ -69,6 +71,7 @@ struct ThemeView: View {
 struct ThemeSubView: View {
     @Environment(\.customTheme) var themeColor
     var body: some View {
+        let _ = dump(themeColor)
         VStack {
             Text("title")
                 .font(.largeTitle)
