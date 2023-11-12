@@ -36,7 +36,7 @@ struct VStackTestView: View {
             
             ZStack {
                 Text("Hello, World!")
-                    .padding(.leading, 45)
+//                    .padding(.leading, 45)
                     .printSizeInfo()
                     
             }
