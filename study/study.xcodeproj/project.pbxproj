@@ -53,6 +53,12 @@
 		6CECD0DA2AFD3B1400C521E0 /* FrameAndFixedSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CECD0D92AFD3B1400C521E0 /* FrameAndFixedSize.swift */; };
 		6CECD0DC2AFD3D3000C521E0 /* ProposedSizeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CECD0DB2AFD3D3000C521E0 /* ProposedSizeTest.swift */; };
 		6CECD0DE2AFFD0FB00C521E0 /* BasicLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CECD0DD2AFFD0FB00C521E0 /* BasicLayoutView.swift */; };
+		6CECD0E22B04C26F00C521E0 /* ObservableMacroContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CECD0E12B04C26F00C521E0 /* ObservableMacroContentView.swift */; };
+		6CECD0E42B04C2A500C521E0 /* ObservationContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CECD0E32B04C2A500C521E0 /* ObservationContentView.swift */; };
+		6CECD0E62B04C30E00C521E0 /* BookStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CECD0E52B04C30E00C521E0 /* BookStore.swift */; };
+		6CECD0E82B04DC6600C521E0 /* ObservedObjectCarFactoryTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CECD0E72B04DC6600C521E0 /* ObservedObjectCarFactoryTestView.swift */; };
+		6CECD0EA2B04FB9E00C521E0 /* ObservableTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CECD0E92B04FB9E00C521E0 /* ObservableTestView.swift */; };
+		6CECD0EC2B04FE9300C521E0 /* DebuggingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CECD0EB2B04FE9300C521E0 /* DebuggingTextView.swift */; };
 		6CF9C64F2ADBA2110016E2F3 /* Week7ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF9C64E2ADBA2110016E2F3 /* Week7ContentView.swift */; };
 		6CF9C6512ADD549D0016E2F3 /* CustomWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF9C6502ADD549D0016E2F3 /* CustomWebView.swift */; };
 		6CF9C6532ADD59E00016E2F3 /* TextFieldAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF9C6522ADD59E00016E2F3 /* TextFieldAlertView.swift */; };
@@ -103,6 +109,12 @@
 		6CECD0D92AFD3B1400C521E0 /* FrameAndFixedSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameAndFixedSize.swift; sourceTree = "<group>"; };
 		6CECD0DB2AFD3D3000C521E0 /* ProposedSizeTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProposedSizeTest.swift; sourceTree = "<group>"; };
 		6CECD0DD2AFFD0FB00C521E0 /* BasicLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicLayoutView.swift; sourceTree = "<group>"; };
+		6CECD0E12B04C26F00C521E0 /* ObservableMacroContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableMacroContentView.swift; sourceTree = "<group>"; };
+		6CECD0E32B04C2A500C521E0 /* ObservationContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationContentView.swift; sourceTree = "<group>"; };
+		6CECD0E52B04C30E00C521E0 /* BookStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookStore.swift; sourceTree = "<group>"; };
+		6CECD0E72B04DC6600C521E0 /* ObservedObjectCarFactoryTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservedObjectCarFactoryTestView.swift; sourceTree = "<group>"; };
+		6CECD0E92B04FB9E00C521E0 /* ObservableTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableTestView.swift; sourceTree = "<group>"; };
+		6CECD0EB2B04FE9300C521E0 /* DebuggingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebuggingTextView.swift; sourceTree = "<group>"; };
 		6CF9C64E2ADBA2110016E2F3 /* Week7ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Week7ContentView.swift; sourceTree = "<group>"; };
 		6CF9C6502ADD549D0016E2F3 /* CustomWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomWebView.swift; sourceTree = "<group>"; };
 		6CF9C6522ADD59E00016E2F3 /* TextFieldAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldAlertView.swift; sourceTree = "<group>"; };
@@ -160,6 +172,7 @@
 		6C9F936D2ACBDFA50015C75D /* study */ = {
 			isa = PBXGroup;
 			children = (
+				6CECD0DF2B04C24F00C521E0 /* Observation */,
 				6CECD0D22AFCFF4900C521E0 /* Layout */,
 				6C73F83C2ADE3E5500A1B0D7 /* Environment */,
 				6CF9C64D2ADBA0E00016E2F3 /* 7week */,
@@ -304,6 +317,27 @@
 			path = Layout;
 			sourceTree = "<group>";
 		};
+		6CECD0DF2B04C24F00C521E0 /* Observation */ = {
+			isa = PBXGroup;
+			children = (
+				6CECD0E32B04C2A500C521E0 /* ObservationContentView.swift */,
+				6CECD0E02B04C25800C521E0 /* ObservableMacro */,
+			);
+			path = Observation;
+			sourceTree = "<group>";
+		};
+		6CECD0E02B04C25800C521E0 /* ObservableMacro */ = {
+			isa = PBXGroup;
+			children = (
+				6CECD0E12B04C26F00C521E0 /* ObservableMacroContentView.swift */,
+				6CECD0E52B04C30E00C521E0 /* BookStore.swift */,
+				6CECD0E72B04DC6600C521E0 /* ObservedObjectCarFactoryTestView.swift */,
+				6CECD0E92B04FB9E00C521E0 /* ObservableTestView.swift */,
+				6CECD0EB2B04FE9300C521E0 /* DebuggingTextView.swift */,
+			);
+			path = ObservableMacro;
+			sourceTree = "<group>";
+		};
 		6CF9C64D2ADBA0E00016E2F3 /* 7week */ = {
 			isa = PBXGroup;
 			children = (
@@ -402,6 +436,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6CECD0EC2B04FE9300C521E0 /* DebuggingTextView.swift in Sources */,
 				6CE1BB9F2AD2B2280094158C /* RefreshableModifierView.swift in Sources */,
 				6CE1BB9D2AD2AA180094158C /* IntrospectInUseView.swift in Sources */,
 				6CE1BBA22AD2B46C0094158C /* RandomUserRouter.swift in Sources */,
@@ -414,15 +449,19 @@
 				6CE1BB7E2AD1C1FC0094158C /* ProfileImageView.swift in Sources */,
 				6C9F93982ACC49CD0015C75D /* RowView.swift in Sources */,
 				6CF9C6572ADD7C320016E2F3 /* JSAlert.swift in Sources */,
+				6CECD0E22B04C26F00C521E0 /* ObservableMacroContentView.swift in Sources */,
 				6C9F93712ACBDFA50015C75D /* ContentView.swift in Sources */,
 				6CE1BB902AD1CACA0094158C /* RandomUserViewModel.swift in Sources */,
 				6CF9C6512ADD549D0016E2F3 /* CustomWebView.swift in Sources */,
 				6C9F93962ACC49150015C75D /* TestVStackView.swift in Sources */,
 				6CE1BB852AD1C4010094158C /* RandomUserRowView.swift in Sources */,
 				6C9F93842ACC112A0015C75D /* ReducxView.swift in Sources */,
+				6CECD0EA2B04FB9E00C521E0 /* ObservableTestView.swift in Sources */,
+				6CECD0E42B04C2A500C521E0 /* ObservationContentView.swift in Sources */,
 				6CE1BBA52AD2D4720094158C /* DarkModeView.swift in Sources */,
 				6C73F84A2ADEA22E00A1B0D7 /* UserInfo.swift in Sources */,
 				6C9F93822ACBF5B60015C75D /* SegmentLayoutView.swift in Sources */,
+				6CECD0E82B04DC6600C521E0 /* ObservedObjectCarFactoryTestView.swift in Sources */,
 				6CE1BB8D2AD1C8080094158C /* RandomUser.swift in Sources */,
 				6CECD0DE2AFFD0FB00C521E0 /* BasicLayoutView.swift in Sources */,
 				6C9F93912ACC470E0015C75D /* InfiniteScrollView.swift in Sources */,
@@ -438,6 +477,7 @@
 				6C73F8462ADE6F5600A1B0D7 /* Theme.swift in Sources */,
 				6CECD0D62AFD04EC00C521E0 /* VStackTestView.swift in Sources */,
 				6CECD0DC2AFD3D3000C521E0 /* ProposedSizeTest.swift in Sources */,
+				6CECD0E62B04C30E00C521E0 /* BookStore.swift in Sources */,
 				6CF9C6532ADD59E00016E2F3 /* TextFieldAlertView.swift in Sources */,
 				6C9F93872ACC13B10015C75D /* DiceView.swift in Sources */,
 				6CF9C6592ADDF2EF0016E2F3 /* WebViewRefreshController.swift in Sources */,

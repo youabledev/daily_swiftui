@@ -26,6 +26,10 @@ struct ContentView: View {
                     UserInfoView()
                 }
                 
+                NavigationLink("Observation") {
+                    ObservationContentView()
+                }
+                
             } //: List
         } //: NavigationStack
     }
