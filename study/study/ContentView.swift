@@ -30,6 +30,10 @@ struct ContentView: View {
                     ObservationContentView()
                 }
                 
+                NavigationLink("Combine") {
+                    CombineTestContentView()
+                }
+                
             } //: List
         } //: NavigationStack
     }
