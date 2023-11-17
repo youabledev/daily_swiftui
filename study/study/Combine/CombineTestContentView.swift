@@ -17,6 +17,10 @@ struct CombineTestContentView: View {
             NavigationLink("PassthroughSubject") {
                 PassThroughPublisherTest()
             }
+            
+            NavigationLink("Sequence Operation") {
+                SequenceOperationTest()
+            }
         }
     }
 }
