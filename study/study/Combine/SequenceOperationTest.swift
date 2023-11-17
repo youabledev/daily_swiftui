@@ -12,7 +12,7 @@ import Combine
 class SequenceOperationTestViewModel {
     @ObservationIgnored var subject = PassthroughSubject<Int, Error>()
     @ObservationIgnored var cancelable = Set<AnyCancellable>()
-    @ObservationIgnored let items: [Int] = Array(0..<100)
+    @ObservationIgnored let items: [Int] = Array(0..<3)
     
     var data: [String] = []
     
@@ -23,6 +23,7 @@ class SequenceOperationTestViewModel {
     func startFirstOperation() {
         subject
             .map { String($0) }
+            .first()
             .sink { _ in
             } receiveValue: { [weak self] value in
                 self?.data.append(value)
