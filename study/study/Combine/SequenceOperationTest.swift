@@ -93,7 +93,7 @@ class SequenceOperationTestViewModel {
             DispatchQueue.main.asyncAfter(deadline: .now() + Double(index)) {
                 self.subject.send(index)
                 
-                if index == items.count {
+                if index == items.indices.last {
                     self.subject.send(completion: .finished) // finished를 보내면 게시 가능한 상태에서 completion 상태가 된다. (last는 마지막 값을 호출하므로 completion을 보내야 한다)
                 }
             }
