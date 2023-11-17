@@ -84,6 +84,83 @@ class SequenceOperationTestViewModel {
         publishData()
     }
     
+    func startLastWithWhere() {
+        subject
+//            .last { $0 > 2 } // 0 1 2 ... 7 8 9 finish 라면 가장 마지막인 9가 반환된다
+            .last { $0 < 3 } // 0 1 2 ... 7 8 9 finish 라면, finish 방출 되고 난 후 2가 반환된다
+            .map { String($0) }
+            .sink { _ in
+            } receiveValue: { [weak self] value in
+                self?.data.append(value)
+            }
+            .store(in: &cancelable)
+        
+        publishData()
+    }
+    
+    func startTryLast() {
+        subject
+            .tryLast {
+                if $0 == 1 {
+                    throw URLError(.badServerResponse) // 에러 던질 수 있음
+                }
+                return $0 > 4 // last는 finish 시에 4보다 큰 3을 last로 반환하겠지만 1일 때 에러를 반환하게 되므로 3은 방출되지 않는다.
+            }
+            .map { String($0) }
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    print("finished tryFirst")
+                case .failure(let error):
+                    self.errorMessage = error.localizedDescription // error handling
+                }
+            } receiveValue: { [weak self] value in
+                self?.data.append(value)
+            }
+            .store(in: &cancelable)
+        
+        publishData()
+    }
+    
+    func startDropFirst() {
+        subject
+            .dropFirst() // 첫번째 게시를 제외시킴. currentValuePublisher의 초기값을 제외시키는데 사용할 수 있음
+            .map { String($0) }
+            .sink { _ in
+            } receiveValue: { [weak self] value in
+                self?.data.append(value)
+            }
+            .store(in: &cancelable)
+        
+        publishData()
+    }
+    
+    func startDropFirstWithCount() {
+        subject
+            .dropFirst(2) // 앞에 두 개 항목을 제외 시킴
+            .map { String($0) }
+            .sink { _ in
+            } receiveValue: { [weak self] value in
+                self?.data.append(value)
+            }
+            .store(in: &cancelable)
+        
+        publishData()
+    }
+    
+    func startDropWhile() {
+        subject
+            .drop(while: { $0 < 5 }) // false를 반환할 때 까지 게시하지 않음. false일 때 게시되는 것이 아닌 false를 반환한 시점부터
+            .map { String($0) }
+            .sink { _ in
+            } receiveValue: { [weak self] value in
+                self?.data.append(value)
+            }
+            .store(in: &cancelable)
+        
+        publishData()
+    }
+    
     // MARK: - publishing
     private func publishData() {
         data.removeAll()
@@ -127,6 +204,33 @@ struct SequenceOperationTest: View {
                 HStack {
                     Button("last") {
                         vm.startLast()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    
+                    Button("last with where") {
+                        vm.startLastWithWhere()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    
+                    Button("try last") {
+                        vm.startTryLast()
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+                
+                HStack {
+                    Button("drop first") {
+                        vm.startDropFirst()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    
+                    Button("drop first with count") {
+                        vm.startDropFirstWithCount()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    
+                    Button("drop while") {
+                        vm.startDropWhile()
                     }
                     .buttonStyle(.borderedProminent)
                 }
