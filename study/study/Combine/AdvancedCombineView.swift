@@ -11,9 +11,9 @@ import Combine
 class AdvancedCombineDataService {
     
 //    @Published var basicPublisher: [String] = [] // 1
-    @Published var basicPublisher: String = ""
+//    @Published var basicPublisher: String = "" // 2
     
-    let currentValuePublisher = CurrentValueSubject<String, Never>("one")
+    let currentValuePublisher = CurrentValueSubject<String, Never>("first")
     
     init() {
         publishFakeData()
@@ -28,7 +28,8 @@ class AdvancedCombineDataService {
         
         for i in items.indices {
             DispatchQueue.main.asyncAfter(deadline: .now() + Double(i)) {
-                self.basicPublisher = items[i]
+//                self.basicPublisher = items[i] // 2
+                self.currentValuePublisher.send(items[i])
             }
         }
     }
@@ -45,7 +46,8 @@ class AdvancedCombineViewModel: ObservableObject {
     }
     
     private func addSubscribers() {
-        dataService.$basicPublisher
+//        dataService.$basicPublisher // 2
+        dataService.currentValuePublisher
             .sink { completion in
                 switch completion {
                 case .finished:

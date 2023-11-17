@@ -13,6 +13,10 @@ struct CombineTestContentView: View {
             NavigationLink("Swiftful Thinking Advanced Combine") {
                 AdvancedCombineView()
             }
+            
+            NavigationLink("PassthroughSubject") {
+                PassThroughPublisherTest()
+            }
         }
     }
 }
