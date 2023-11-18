@@ -30,19 +30,7 @@ class TimingOperationTestViewModel: ObservableObject {
     }
     
     private func publishData() {
-        data.removeAll()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0) {
-            self.subject.send(1)
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.subject.send(2)
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            self.subject.send(3)
-        }
+
     }
     
     // MARK: - Operation
@@ -67,9 +55,89 @@ class TimingOperationTestViewModel: ObservableObject {
             }
             .store(in: &cancelable)
         
-        publishData()
+        data.removeAll()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0) {
+            self.subject.send(1)
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.subject.send(2)
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            self.subject.send(3)
+        }
     }
     
+    func testDelay() {
+        subject
+            .delay(for: 3, scheduler: RunLoop.main)
+            .map { String($0) }
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    print("finished")
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            } receiveValue: { [weak self] value in
+                self?.data.append(value)
+            }
+            .store(in: &cancelable)
+        
+        data.removeAll()
+        let items = [1, 2, 3]
+        for index in items.indices {
+            DispatchQueue.main.asyncAfter(deadline: .now() + Double(index)) {
+                self.subject.send(items[index])
+            }
+        }
+    }
+    
+    func testMeasureInterval() {
+        // upstream publisher가 emit하는 이벤트 간의 시간 간격을 측정함
+        // 이벤트가 얼마나 자주 발생하는지 알수 있음
+        Timer.publish(every: 1, on: .main, in: .default)
+            .autoconnect()
+            .measureInterval(using: RunLoop.main)
+            .sink { [weak self] value in
+                self?.data.append("\(value)")
+            }
+            .store(in: &cancelable)
+    }
+    
+    func test2MeasureInerval() {
+        let publisher = PassthroughSubject<String, Never>()
+        let intervalPublisher = publisher.measureInterval(using: RunLoop.main)
+        
+        let combinedPublisher = Publishers.Zip(publisher, intervalPublisher)
+        
+        combinedPublisher
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    print("finished")
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            } receiveValue: { [weak self] event, interval in
+                self?.data.append("\(event) :: \(interval)")
+            }
+            .store(in: &cancelable)
+
+        publisher.send("test1") // print 0
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            publisher.send("test2") // print 1
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+            publisher.send("test3") // print 4
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 6.0) {
+            publisher.send(completion: .finished)
+        }
+    }
 }
 
 struct TimingOperationTest: View {
@@ -82,6 +150,22 @@ struct TimingOperationTest: View {
                     Button("debounce") {
                         vm.startDebounce()
                     }
+                    .buttonStyle(.borderedProminent)
+                    
+                    Button("delay") {
+                        vm.testDelay()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    
+                    Button("measure interval1") {
+                        vm.testMeasureInterval()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    
+                    Button("measure interval2") {
+                        vm.test2MeasureInerval()
+                    }
+                    .buttonStyle(.borderedProminent)
                 } //: HStack
             } //: VStack
             
