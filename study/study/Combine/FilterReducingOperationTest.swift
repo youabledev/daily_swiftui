@@ -21,7 +21,8 @@ class FilterReducingOperationTestViewModel {
     private func publishData() {
         data.removeAll()
         
-        let items: [Int] = [1, 10, 3, 4, 11, 11, 5, 11]
+//        let items: [Int] = [1, 10, 3, 4, 11, 11, 5, 11]
+        let items = [100, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         for index in items.indices {
             DispatchQueue.main.asyncAfter(deadline: .now() + Double(index)) {
                 self.subject.send(items[index])
@@ -249,6 +250,32 @@ class FilterReducingOperationTestViewModel {
         
         publishData()
     }
+    
+    func startScan() {
+        subject
+            .scan(20) { existValue, newValue in
+                // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                return existValue + newValue // 5, 7, 10 ...
+                // initialResult가 첫번째 existValue가 됨 5, 4+1, 5+2
+                // [100, 2, 3, 4, 5, 6, 7, 8, 9, 10] -> 104, 106, 109
+            } 
+//            .scan(0) { $0 + $1 }
+//            .scan(0, +)
+            .map { String($0) }
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    print("finish Scan")
+                case .failure(let error):
+                    self.errorMessage = error.localizedDescription
+                }
+            } receiveValue: { [weak self] value in
+                self?.data.append(value)
+            }
+            .store(in: &cancelable)
+        
+        publishData()
+    }
 }
 
 struct FilterReducingOperationTest: View {
@@ -304,6 +331,13 @@ struct FilterReducingOperationTest: View {
                     
                     Button("Replace Error") {
                         vm.startReplaceError()
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+                
+                HStack {
+                    Button("scan") {
+                        vm.startScan()
                     }
                     .buttonStyle(.borderedProminent)
                 }
