@@ -21,7 +21,8 @@ class TimingOperationTestViewModel: ObservableObject {
     
     init() {
         $searchText
-            .debounce(for: 1, scheduler: DispatchQueue.main)
+//            .debounce(for: 1, scheduler: DispatchQueue.main)
+            .throttle(for: 3, scheduler: RunLoop.main, latest: false) // 3초가 되면 값을 전달. false로 지정하면 지정된 시간이 시작되었을 때 입력한 값을 전달함
             .drop { $0.isEmpty } // drop first가 안되서 drop으로 isEmpty 아닐 때 publish하도록
             .sink { text in
                 print("-\(text)\n")
@@ -138,6 +139,23 @@ class TimingOperationTestViewModel: ObservableObject {
             publisher.send(completion: .finished)
         }
     }
+    
+    func testThrottle() {
+        // 주어진 시간 간격 동안 최대 하나의 값을 전달
+        // 연속되어 빠르게 나타나는 이벤트를 처리할 수 있음
+        Timer.publish(every: 3.0, on: .main, in: .default)
+            .autoconnect()
+        // latest == true : 설정된 시간이 되면 가장 최근에 수신된 값을 전달. 최신 상태 반영시 유리
+        // latest == false : 설정된 시간이 되면 처음에 수신된 값을 전달함. 초기 상태를 반영하고 싶을 때 유리
+            .throttle(for: 10.0, scheduler: RunLoop.main, latest: false)
+            .sink(
+                receiveCompletion: { _ in },
+                receiveValue: { [weak self] value in
+                    self?.data.append("Received Timestamp \(value).")
+                }
+             )
+            .store(in: &cancelable)
+    }
 }
 
 struct TimingOperationTest: View {
@@ -167,6 +185,13 @@ struct TimingOperationTest: View {
                     }
                     .buttonStyle(.borderedProminent)
                 } //: HStack
+                
+                HStack {
+                    Button("throttle") {
+                        vm.testThrottle()
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
             } //: VStack
             
             ScrollView {
