@@ -161,6 +161,30 @@ class SequenceOperationTestViewModel {
         publishData()
     }
     
+    func startTryDrop() {
+        subject
+            .tryDrop {
+                if $0 > 15 {
+                    throw URLError(.badServerResponse)
+                }
+                return $0 < 6
+            }
+            .map { String($0) }
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    print("finished tryDrop")
+                case .failure(let error):
+                    self.errorMessage = error.localizedDescription // error handling
+                }
+            } receiveValue: { [weak self] value in
+                self?.data.append(value)
+            }
+            .store(in: &cancelable)
+        
+        publishData()
+    }
+    
     // MARK: - publishing
     private func publishData() {
         data.removeAll()
@@ -231,6 +255,11 @@ struct SequenceOperationTest: View {
                     
                     Button("drop while") {
                         vm.startDropWhile()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    
+                    Button("try drop") {
+                        vm.startTryDrop()
                     }
                     .buttonStyle(.borderedProminent)
                 }
