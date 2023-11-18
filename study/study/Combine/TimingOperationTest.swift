@@ -156,6 +156,31 @@ class TimingOperationTestViewModel: ObservableObject {
              )
             .store(in: &cancelable)
     }
+    
+    func testTimeout() {
+        subject
+            .timeout(0.75, scheduler: DispatchQueue.main)
+            .map { String($0) }
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    print("finished")
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            } receiveValue: { [weak self] value in
+                self?.data.append(value)
+            }
+            .store(in: &cancelable)
+        
+        let items = [1, 2, 3, 4, 5, 6, 7]
+        
+        for index in items.indices {
+            DispatchQueue.main.asyncAfter(deadline: .now() + Double(index)) {
+                self.subject.send(items[index])
+            }
+        }
+    }
 }
 
 struct TimingOperationTest: View {
@@ -189,6 +214,11 @@ struct TimingOperationTest: View {
                 HStack {
                     Button("throttle") {
                         vm.testThrottle()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    
+                    Button("timeout") {
+                        vm.testTimeout()
                     }
                     .buttonStyle(.borderedProminent)
                 }
