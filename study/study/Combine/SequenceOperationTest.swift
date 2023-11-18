@@ -243,7 +243,7 @@ class SequenceOperationTestViewModel {
             .sink { completion in
                 switch completion {
                 case .finished:
-                    print("finish output in") // output에 의해 지정된 범위의 요소가 publish 되고 난 후 finish 
+                    print("finish output in") // output에 의해 지정된 범위의 요소가 publish 되고 난 후 finish
                 case .failure(let error):
                     print(error.localizedDescription)
                 }

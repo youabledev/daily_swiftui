@@ -21,7 +21,15 @@ struct CombineTestContentView: View {
             NavigationLink("Sequence Operation") {
                 SequenceOperationTest()
             }
-        }
+            
+            NavigationLink("Mathmatic Operation") {
+                MathmaticOperationTest()
+            }
+            
+            NavigationLink("Filter and Reducing Operation") {
+                FilterReducingOperationTest()
+            }
+        } //: List
     }
 }
 
