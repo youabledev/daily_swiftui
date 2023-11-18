@@ -11,6 +11,8 @@ import Combine
 @Observable
 class FilterReducingOperationTestViewModel {
     @ObservationIgnored var subject = PassthroughSubject<Int, Error>()
+    @ObservationIgnored var nilSubject = PassthroughSubject<Int?, Error>()
+    
     @ObservationIgnored var cancelable = Set<AnyCancellable>()
     
     var data: [String] = []
@@ -26,6 +28,21 @@ class FilterReducingOperationTestViewModel {
                 
                 if index == items.indices.last {
                     self.subject.send(completion: .finished)
+                }
+            }
+        }
+    }
+    
+    private func publishDataWithNil() {
+        data.removeAll()
+        
+        let items: [Int?] = [1, 10, nil, 4, nil, nil, 5, nil]
+        for index in items.indices {
+            DispatchQueue.main.asyncAfter(deadline: .now() + Double(index)) {
+                self.nilSubject.send(items[index])
+                
+                if index == items.indices.last {
+                    self.nilSubject.send(completion: .finished)
                 }
             }
         }
@@ -189,6 +206,49 @@ class FilterReducingOperationTestViewModel {
         
         publishData()
     }
+    
+    func startReplaceNil() {
+        nilSubject
+            .replaceNil(with: 1000)
+            .map { String($0) }
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    print("finish map")
+                case .failure(let error):
+                    self.errorMessage = error.localizedDescription
+                }
+            } receiveValue: { [weak self] value in
+                self?.data.append(value)
+            }
+            .store(in: &cancelable)
+        
+        publishDataWithNil()
+    }
+    
+    func startReplaceError() {
+        subject
+            .tryMap { value in
+                if value == 3 {
+                    throw URLError(.badServerResponse) // value == 3 이 되면 에러를 던지므로 이후 값은 publish 되지 않음
+                }
+                return String(value)
+            }
+            .replaceError(with: "5000") // error가 발생했을 경우 대치할 값을 지정할 수 있음 and Stopped publish
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    print("finish map")
+                case .failure(let error):
+                    self.errorMessage = error.localizedDescription
+                }
+            } receiveValue: { [weak self] value in
+                self?.data.append(value)
+            }
+            .store(in: &cancelable)
+        
+        publishData()
+    }
 }
 
 struct FilterReducingOperationTest: View {
@@ -234,7 +294,18 @@ struct FilterReducingOperationTest: View {
                         vm.startTryRemoveDuplicates()
                     }
                     .buttonStyle(.borderedProminent)
+                }
+                
+                HStack {
+                    Button("Replace nil") {
+                        vm.startReplaceNil()
+                    }
+                    .buttonStyle(.borderedProminent)
                     
+                    Button("Replace Error") {
+                        vm.startReplaceError()
+                    }
+                    .buttonStyle(.borderedProminent)
                 }
             } //: VStack
             
