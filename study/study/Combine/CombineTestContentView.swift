@@ -14,20 +14,24 @@ struct CombineTestContentView: View {
                 AdvancedCombineView()
             }
             
-            NavigationLink("PassthroughSubject") {
+            NavigationLink("🛟 PassthroughSubject") {
                 PassThroughPublisherTest()
             }
             
-            NavigationLink("Sequence Operation") {
+            NavigationLink("🔗 Sequence Operation") {
                 SequenceOperationTest()
             }
             
-            NavigationLink("Mathmatic Operation") {
+            NavigationLink("📐 Mathmatic Operation") {
                 MathmaticOperationTest()
             }
             
-            NavigationLink("Filter and Reducing Operation") {
+            NavigationLink("🪟 Filter and Reducing Operation") {
                 FilterReducingOperationTest()
+            }
+            
+            NavigationLink("🕰️ Timing Operation") {
+                TimingOperationTest()
             }
         } //: List
     }
