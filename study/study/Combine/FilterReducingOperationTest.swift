@@ -258,7 +258,7 @@ class FilterReducingOperationTestViewModel {
                 return existValue + newValue // 5, 7, 10 ...
                 // initialResult가 첫번째 existValue가 됨 5, 4+1, 5+2
                 // [100, 2, 3, 4, 5, 6, 7, 8, 9, 10] -> 104, 106, 109
-            } 
+            }
 //            .scan(0) { $0 + $1 }
 //            .scan(0, +)
             .map { String($0) }
@@ -271,6 +271,68 @@ class FilterReducingOperationTestViewModel {
                 }
             } receiveValue: { [weak self] value in
                 self?.data.append(value)
+            }
+            .store(in: &cancelable)
+        
+        publishData()
+    }
+    
+    func startReduce() {
+        data.removeAll()
+        
+        [1, 2, 3, 4].publisher
+            .reduce(100) { $0 - $1 }
+            .map { String($0) }
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    print("finish Scan")
+                case .failure(let error):
+                    self.errorMessage = error.localizedDescription
+                }
+            } receiveValue: { [weak self] value in
+                self?.data.append(value)
+            }
+            .store(in: &cancelable)
+    }
+    
+    func startCollect() {
+        subject
+            .map { String($0) }
+            .collect() // 모든 publish가 끝난 후 데이터를 한번에 보여줄 수 있음
+            .map { $0.joined(separator: " ") }
+            .sink { completion in
+            } receiveValue: { [weak self] value in
+                self?.data.append(value)
+            }
+            .store(in: &cancelable)
+        publishData()
+    }
+    
+    func startCollectCount() {
+        subject
+            .map { String($0) }
+            .collect(2) // count 만큼 묵어서 publish
+            .sink { completion in
+            } receiveValue: { [weak self] value in
+                self?.data = value
+            }
+            .store(in: &cancelable)
+        publishData()
+    }
+    
+    func startAllSatisfy() {
+        subject
+//            .allSatisfy {
+//                $0 == 5 // return boolean
+            // 첫번째 요소부터 false 이기 때문에 즉시 false published
+//            }
+            .allSatisfy {
+                $0 > 0 // 모든 요소가 0보다 크기 때문에 마지막 요소가 publish 되고 나서 true published
+            }
+            .sink { _ in
+            } receiveValue: { [weak self] value in
+                self?.data.append("\(value)")
             }
             .store(in: &cancelable)
         
@@ -338,6 +400,28 @@ struct FilterReducingOperationTest: View {
                 HStack {
                     Button("scan") {
                         vm.startScan()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    
+                    Button("reduce") {
+                        vm.startReduce()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    
+                    Button("collect") {
+                        vm.startCollect()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    
+                    Button("collect count") {
+                        vm.startCollectCount()
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+                
+                HStack {
+                    Button("all satisify") {
+                        vm.startAllSatisfy()
                     }
                     .buttonStyle(.borderedProminent)
                 }
