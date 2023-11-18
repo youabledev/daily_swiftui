@@ -185,6 +185,76 @@ class SequenceOperationTestViewModel {
         publishData()
     }
     
+    func startPrefix() {
+        subject
+            .prefix(3) // 앞 3개의 요소 반환
+            .map { String($0) }
+            .sink { _ in
+            } receiveValue: { [weak self] value in
+                self?.data.append(value)
+            }
+            .store(in: &cancelable)
+        
+        publishData()
+    }
+    
+    func startPrefixWhile() {
+        subject
+            .prefix(while: { $0 < 5 }) // false를 반환하면 publish finish. true 까지 publish 하고 조건이 false가 되면 publish가 끝남
+            .map { String($0) }
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    print("finish prefix while") // prefix while이 false를 반환하면 finish 됨
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            } receiveValue: { [weak self] value in
+                self?.data.append(value)
+            }
+            .store(in: &cancelable)
+        
+        publishData()
+    }
+    
+    func startOutputAt() {
+        subject
+            .output(at: 0) // 인덱스이기 때문에 첫번째 요소의 인덱스는 0
+            .map { String($0) }
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    print("finish output") // output에 의해 publish가 끝나면 finished
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            } receiveValue: { [weak self] value in
+                self?.data.append(value)
+            }
+            .store(in: &cancelable)
+        
+        publishData()
+    }
+    
+    func startOutputIn() {
+        subject
+            .output(in: 2..<6) // 인덱스 범위를 지정하면 그 인덱스에 해당하는 요소가 published 됨
+            .map { String($0) }
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    print("finish output in") // output에 의해 지정된 범위의 요소가 publish 되고 난 후 finish 
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            } receiveValue: { [weak self] value in
+                self?.data.append(value)
+            }
+            .store(in: &cancelable)
+        
+        publishData()
+    }
+    
     // MARK: - publishing
     private func publishData() {
         data.removeAll()
@@ -260,6 +330,30 @@ struct SequenceOperationTest: View {
                     
                     Button("try drop") {
                         vm.startTryDrop()
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+                
+                HStack {
+                    Button("Prefix") {
+                        vm.startPrefix()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    
+                    Button("Prefix While") {
+                        vm.startPrefixWhile()
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+                
+                HStack {
+                    Button("Output at") {
+                        vm.startOutputAt()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    
+                    Button("Output in") {
+                        vm.startOutputIn()
                     }
                     .buttonStyle(.borderedProminent)
                 }
