@@ -33,6 +33,10 @@ struct CombineTestContentView: View {
             NavigationLink("🕰️ Timing Operation") {
                 TimingOperationTest()
             }
+            
+            NavigationLink("🤼‍♀️ Multiple Publisher") {
+                MultiplePublisherTest()
+            }
         } //: List
     }
 }
