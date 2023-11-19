@@ -133,6 +133,53 @@ class MultiplePublisherTestViewModel: ObservableObject {
             thirdSubject.send(true)
         }
     }
+    
+    func testTryMapCatch() {
+        let stringPublisher = PassthroughSubject<String, Never>()
+        let intPublisher = PassthroughSubject<Int, Never>()
+        
+        intPublisher
+            .tryMap { value in
+                if value == 2 {
+                    // 에러가 throw 되면 publisher는 에러를 방출하고 종료됨
+                    throw URLError(.badServerResponse)
+                }
+                return String(value)
+            }
+            .catch { value in
+                // 에러가 발생했을 때 다른 publisher로 대체할 수 있음
+                // 에러 발생 시 대체 데이터를 제공해야 할 경우 유용
+                stringPublisher
+            }
+            .sink { [weak self] value in
+                self?.data.append(value)
+            }
+            .store(in: &cancellable)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            intPublisher.send(1)
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            intPublisher.send(2)
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            intPublisher.send(3)
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+            stringPublisher.send("라")
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            intPublisher.send(4)
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
+            stringPublisher.send("마")
+        }
+    }
 }
 
 struct MultiplePublisherTest: View {
@@ -157,6 +204,12 @@ struct MultiplePublisherTest: View {
                 .buttonStyle(.borderedProminent)
             }
             
+            HStack {
+                Button("tryMap and catch") {
+                    vm.testTryMapCatch()
+                }
+                .buttonStyle(.borderedProminent)
+            }
             
             VStack {
                 ForEach(vm.data, id: \.self) {
