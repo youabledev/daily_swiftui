@@ -91,6 +91,48 @@ class MultiplePublisherTestViewModel: ObservableObject {
             firstSubject.send("라")
         }
     }
+    
+    func testZip() {
+        // 여러 publisher를 결합하여 각 publisher로부터 방출되는 값들을 순서대로 쌍으로 묶음
+        // 각 publisher의 타입은 달라도 되고, 동일한 순서로 값을 방출할 때 유용함
+        let firstSubject = PassthroughSubject<String, Never>()
+        let secondSubject = PassthroughSubject<Int, Never>()
+        let thirdSubject = PassthroughSubject<Bool, Never>()
+        
+        firstSubject
+            .zip(secondSubject, thirdSubject)
+            .map {
+                String($0.0 + "\($0.1)" + "\($0.2)")
+            }
+            .sink { [weak self] value in
+                self?.data.append(value)
+            }
+            .store(in: &cancellable)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            firstSubject.send("가")
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            firstSubject.send("나")
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            secondSubject.send(1)
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+            firstSubject.send("라")
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            secondSubject.send(2)
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
+            thirdSubject.send(true)
+        }
+    }
 }
 
 struct MultiplePublisherTest: View {
@@ -106,6 +148,11 @@ struct MultiplePublisherTest: View {
                 
                 Button("merge") {
                     vm.testMerge()
+                }
+                .buttonStyle(.borderedProminent)
+                
+                Button("zip") {
+                    vm.testZip()
                 }
                 .buttonStyle(.borderedProminent)
             }
